@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAMES Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            text-align: center;
+        }
+        header {
+            background-color: #6200ea;
+            color: white;
+            padding: 20px 10px;
+        }
+        form {
+            margin: 20px auto;
+            padding: 20px;
+            width: 300px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #6200ea;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #3700b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #6200ea;
+        }
+        .history {
+            margin: 20px auto;
+            padding: 10px;
+            max-width: 300px;
+            text-align: left;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>FLAMES Calculator</h1>
+        <p>Find out your relationship status based on FLAMES!</p>
+    </header>
+
+    <form id="flamesForm">
+        <input type="text" id="name1" placeholder="Enter your name" required>
+        <input type="text" id="name2" placeholder="Enter your partner's name" required>
+        <button type="button" onclick="calculateFLAMES()">Check Relationship</button>
+    </form>
+
+    <div class="result" id="result"></div>
+    <div class="history" id="history">
+        <h3>Shared History:</h3>
+        <ul id="historyList"></ul>
+    </div>
+
+    <script>
+        function calculateFLAMES() {
+            const name1 = document.getElementById("name1").value.trim().toLowerCase();
+            const name2 = document.getElementById("name2").value.trim().toLowerCase();
+
+            if (!name1 || !name2) {
+                document.getElementById("result").textContent = "Please enter both names.";
+                return;
+            }
+
+            // Remove common letters
+            let unmatched1 = name1.split('');
+            let unmatched2 = name2.split('');
+            unmatched1.forEach(char => {
+                const index = unmatched2.indexOf(char);
+                if (index !== -1) unmatched2.splice(index, 1);
+            });
+
+            const totalUnmatched = unmatched1.length + unmatched2.length;
+
+            // FLAMES logic
+            const flames = ["Friends", "Lovers", "Affection", "Marriage", "Enemies", "Siblings"];
+            let index = 0;
+
+            for (let i = 6; i > 1; i--) {
+                index = (index + totalUnmatched - 1) % i;
+                flames.splice(index, 1);
+            }
+
+            const result = flames[0];
+            document.getElementById("result").textContent = `Your relationship is: ${result}`;
+
+            // Save to shared history
+            saveToHistory(name1, name2, result);
+        }
+
+        function saveToHistory(name1, name2, result) {
+            // Add a backend link when deployed (Optional)
+            alert(`Saved: ${name1} & ${name2}: ${result}`);
+        }
+    </script>
+
+</body>
+</html>
